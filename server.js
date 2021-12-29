@@ -1,14 +1,18 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-
 const router = require('./network/routes')
+const db = require("./db");
+require("dotenv").config({ path: ".env" });
+
+db(process.env.DB_CONNECT);
 
 const app = express()
 
-app.use(bodyParser.json())
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }));
 router(app)
 
 app.use('/app', express.static('public'))
 
-app.listen(3000)
-console.log('La app esta escuchando en el puerto 3000')
+app.listen(process.env.PORT, () => {
+  console.log(`La app esta escuchando en el puerto ${process.env.PORT}`)
+})
