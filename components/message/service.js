@@ -1,20 +1,25 @@
 const Model = require('./model')
 
-function addMessage(message) {
+const addMessage = (message) => {
   const myMessage = new Model(message)
   myMessage.save()
 }
 
-async function getMessage(filterUser) {
-  let filter = {}
-  if (filterUser) {
-    filter = { user: filterUser}
-  }
-  const messages = await Model.find(filter)
-  return messages
+const getMessage = async (filterUser) => {
+
+  return new Promise((resolve, reject) => {
+    let filter = {}
+    if (filterUser) filter = { user: filterUser }
+    const messages = Model.find(filter)
+      .populate('user')
+      .exec((error, populated) => {
+        if(error) reject(error)
+        resolve(populated)
+      })
+  })
 }
 
-async function updateText(id, message) {
+const updateText = async (id, message) => {
   const foundMessage = await Model.findOne({
     _id: id
   })
@@ -24,8 +29,7 @@ async function updateText(id, message) {
   return newMessage
 }
 
-async function removeMessage(id) {
-  console.log('esta es la id', id)
+const removeMessage = async (id) => {
   return await Model.deleteOne({
     _id: id
   })
@@ -34,8 +38,6 @@ async function removeMessage(id) {
 module.exports = {
   add: addMessage,
   list: getMessage,
-  updateText: updateText,
+  update: updateText,
   remove: removeMessage
-  // get
-  // update
 }
