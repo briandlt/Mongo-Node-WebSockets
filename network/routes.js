@@ -4,8 +4,8 @@ const user = require('../components/user/api')
 const chat = require('../components/chat/api')
 
 const routes = (server) => {
-  server.use('/messages', message)
-  server.use('/users', user)
+  server.use('/message', message)
+  server.use('/user', user)
   server.use('/chat', chat)
 }
 

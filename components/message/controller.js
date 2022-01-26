@@ -1,4 +1,5 @@
 const service = require('./service')
+const { socket } = require('../../socket')
 
 const addMessage = (chat, user, message, file) => {
   return new Promise((resolve, reject) => {
@@ -19,6 +20,7 @@ const addMessage = (chat, user, message, file) => {
       file: fileUrl
     }
     service.add(fullMessage)
+    socket.io.emit('message', fullMessage)
     resolve(fullMessage)
   })
 }
